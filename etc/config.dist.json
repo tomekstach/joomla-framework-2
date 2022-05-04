@@ -1,0 +1,21 @@
+{
+  "nameSpace": "Katalyst\\CM\\Controller\\",
+  "database": {
+    "host": "",
+    "user": "",
+    "password": "",
+    "database": "",
+    "prefix": ""
+  },
+  "log": {
+    "level": "error",
+    "application": "error"
+  },
+  "errorReporting": 0,
+  "debug": false,
+  "dev": true,
+  "sessionExpire": 3600,
+  "tokenExpire": 3600,
+  "k": "",
+  "allowDomains": []
+}

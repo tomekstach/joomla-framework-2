@@ -1,0 +1,21 @@
+{
+  "routes": [{
+      "method": "post",
+      "pattern": "/api/v1/auth/:method",
+      "controller": "Api\\AuthenticationControllerGet",
+      "rules": [],
+      "defaults": [{
+        "_format": "json"
+      }]
+    },
+    {
+      "method": "get",
+      "pattern": "/api/v1/user/:method",
+      "controller": "Api\\AuthenticationControllerGet",
+      "rules": [],
+      "defaults": [{
+        "_format": "json"
+      }]
+    }
+  ]
+}

@@ -1,0 +1,1296 @@
+{
+	"info": {
+		"_postman_id": "149121ee-a71b-457e-942c-1fefd70ac3d9",
+		"name": "Joomla! Framework v2",
+		"description": "This is a collection of tests for REST API application",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Authentication Controller",
+			"item": [
+				{
+					"name": "Login",
+					"item": [
+						{
+							"name": "Proper request",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const response = pm.response;",
+											"const responseData = response.json();",
+											"",
+											"pm.test('Status code is 200', testUtils.responseSuccess(response));",
+											"pm.test('Schema is valid', testUtils.validate(responseData, authenticationUserSchema));"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "username",
+											"value": "{{username}}",
+											"type": "text"
+										},
+										{
+											"key": "password",
+											"value": "{{password}}",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{baseUrl}}auth/login",
+									"host": [
+										"{{baseUrl}}auth"
+									],
+									"path": [
+										"login"
+									]
+								},
+								"description": "API endpoint should return user object."
+							},
+							"response": []
+						},
+						{
+							"name": "Lack username",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const response = pm.response;",
+											"const responseData = response.json();",
+											"",
+											"pm.test('Error code is 403', testUtils.responseError(response, 403));",
+											"pm.test('Schema is valid', testUtils.validate(responseData, errorResponseSchema));",
+											"pm.test('If response has proper message', testUtils.verifyErrorResponse(responseData, 403, 'Username is empty!'));"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "username",
+											"value": "",
+											"type": "text"
+										},
+										{
+											"key": "password",
+											"value": "{{password}}",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{baseUrl}}auth/login",
+									"host": [
+										"{{baseUrl}}auth"
+									],
+									"path": [
+										"login"
+									]
+								},
+								"description": "API endpoint should return a lack username error massage."
+							},
+							"response": []
+						},
+						{
+							"name": "Lack password",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const response = pm.response;",
+											"const responseData = response.json();",
+											"",
+											"pm.test('Error code is 403', testUtils.responseError(response, 403));",
+											"pm.test('Schema is valid', testUtils.validate(responseData, errorResponseSchema));",
+											"pm.test('If response has proper message', testUtils.verifyErrorResponse(responseData, 403, 'Password is empty!'));"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "username",
+											"value": "{{username}}",
+											"type": "text"
+										},
+										{
+											"key": "password",
+											"value": "",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{baseUrl}}auth/login",
+									"host": [
+										"{{baseUrl}}auth"
+									],
+									"path": [
+										"login"
+									]
+								},
+								"description": "API endpoint should return a lack username error massage."
+							},
+							"response": []
+						},
+						{
+							"name": "Wrong username",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const response = pm.response;",
+											"const responseData = response.json();",
+											"",
+											"pm.test('Error code is 403', testUtils.responseError(response, 403));",
+											"pm.test('Schema is valid', testUtils.validate(responseData, errorResponseSchema));",
+											"pm.test('If response has proper message', testUtils.verifyErrorResponse(responseData, 403, 'Wrong username!'));"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "username",
+											"value": "{{username}}zzzz",
+											"type": "text"
+										},
+										{
+											"key": "password",
+											"value": "{{password}}",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{baseUrl}}auth/login",
+									"host": [
+										"{{baseUrl}}auth"
+									],
+									"path": [
+										"login"
+									]
+								},
+								"description": "API endpoint should return a wrong username error massage."
+							},
+							"response": []
+						},
+						{
+							"name": "Wrong password",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const response = pm.response;",
+											"const responseData = response.json();",
+											"",
+											"pm.test('Error code is 403', testUtils.responseError(response, 403));",
+											"pm.test('Schema is valid', testUtils.validate(responseData, errorResponseSchema));",
+											"pm.test('If response has proper message', testUtils.verifyErrorResponse(responseData, 403, 'Wrong password!'));"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "username",
+											"value": "{{username}}",
+											"type": "text"
+										},
+										{
+											"key": "password",
+											"value": "{{password}}zzzzz",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{baseUrl}}auth/login",
+									"host": [
+										"{{baseUrl}}auth"
+									],
+									"path": [
+										"login"
+									]
+								},
+								"description": "API endpoint should return a wrong password error massage."
+							},
+							"response": []
+						},
+						{
+							"name": "Wrong request method",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const response = pm.response;",
+											"const responseData = response.json();",
+											"",
+											"pm.test('Error code is 405', testUtils.responseError(response, 405));",
+											"pm.test('Schema is valid', testUtils.validate(responseData, errorResponseSchema));",
+											"pm.test('If response has proper message', testUtils.verifyErrorResponse(responseData, 405, 'Route `api/v1/auth/login` does not support `GET` requests.'));"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "username",
+											"value": "{{username}}",
+											"type": "text"
+										},
+										{
+											"key": "password",
+											"value": "{{password}}",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{baseUrl}}auth/login",
+									"host": [
+										"{{baseUrl}}auth"
+									],
+									"path": [
+										"login"
+									]
+								},
+								"description": "API endpoint should return a wrong request method error massage."
+							},
+							"response": []
+						}
+					],
+					"description": "## Description\n\nMany of the API methods need to be protected by user authentication. For now, we implement a method which is similar to the Career Map authentication.\n\n## Acceptance Criteria\n\n1. **auth/login** method is available as a REST API Endpoint.\n1. API method respects only POST method.\n1. API method returns JSON with user data if the user is authenticated correctly.\n1. API method returns a proper error message if something is wrong.",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"testUtils = extendGlobalTestUtils({",
+									"    validate: function(response, schema) {        ",
+									"        return () => pm.expect(response).to.have.jsonSchema(schema);",
+									"    }",
+									"});"
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						}
+					]
+				},
+				{
+					"name": "Logout",
+					"item": [
+						{
+							"name": "Proper request",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const response = pm.response;",
+											"const responseData = response.json();",
+											"",
+											"pm.test('Status code is 200', testUtils.responseSuccess(response));",
+											"pm.test('Schema is valid', testUtils.validate(responseData, messageResponseSchema));",
+											"pm.test('If response has proper message', testUtils.verifyResponse(responseData));"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"// Login user. ",
+											"loginUser = {",
+											"    method: 'POST',",
+											"    url: pm.environment.get(\"baseUrl\") + 'auth/login/',",
+											"    header: 'Authorization:Bearer ' + pm.environment.get(\"token\"),",
+											"    body: {",
+											"      mode: 'urlencoded',",
+											"      urlencoded: [",
+											"        { key: \"username\", value: pm.environment.get(\"username\"), disabled: false },",
+											"        { key: \"password\", value: pm.environment.get(\"password\"), disabled: false }",
+											"      ]",
+											"    },",
+											"};",
+											"",
+											"pm.sendRequest(loginUser, function (error) {",
+											"    if (error) throw new Error(error);",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": []
+								},
+								"url": {
+									"raw": "{{baseUrl}}auth/logout",
+									"host": [
+										"{{baseUrl}}auth"
+									],
+									"path": [
+										"logout"
+									]
+								},
+								"description": "API endpoint should return proper message."
+							},
+							"response": []
+						},
+						{
+							"name": "Not logged user",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const response = pm.response;",
+											"const responseData = response.json();",
+											"",
+											"pm.test('Error code is 400', testUtils.responseError(response, 400));",
+											"pm.test('Schema is valid', testUtils.validate(responseData, errorResponseSchema));",
+											"pm.test('If response has proper message', testUtils.verifyErrorResponse(responseData, 400, 'User already logged out!'));"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": []
+								},
+								"url": {
+									"raw": "{{baseUrl}}auth/logout",
+									"host": [
+										"{{baseUrl}}auth"
+									],
+									"path": [
+										"logout"
+									]
+								},
+								"description": "API endpoint should return a not logged user error massage."
+							},
+							"response": []
+						},
+						{
+							"name": "Wrong request method",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const response = pm.response;",
+											"const responseData = response.json();",
+											"",
+											"pm.test('Error code is 405', testUtils.responseError(response, 405));",
+											"pm.test('Schema is valid', testUtils.validate(responseData, errorResponseSchema));",
+											"pm.test('If response has proper message', testUtils.verifyErrorResponse(responseData, 405, 'Route `api/v1/auth/logout` does not support `GET` requests.'));"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"// Login user. ",
+											"loginUser = {",
+											"    method: 'POST',",
+											"    url: pm.environment.get(\"baseUrl\") + 'auth/login/',",
+											"    header: 'Authorization:Bearer ' + pm.environment.get(\"token\"),",
+											"    body: {",
+											"      mode: 'urlencoded',",
+											"      urlencoded: [",
+											"        { key: \"username\", value: pm.environment.get(\"username\"), disabled: false },",
+											"        { key: \"password\", value: pm.environment.get(\"password\"), disabled: false }",
+											"      ]",
+											"    },",
+											"};",
+											"",
+											"pm.sendRequest(loginUser, function (error) {",
+											"    if (error) throw new Error(error);",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": []
+								},
+								"url": {
+									"raw": "{{baseUrl}}auth/logout",
+									"host": [
+										"{{baseUrl}}auth"
+									],
+									"path": [
+										"logout"
+									]
+								},
+								"description": "API endpoint should return a wrong request method error massage."
+							},
+							"response": []
+						}
+					],
+					"description": "## Description\n\nREST API should have a method to logout user.\n\n## Acceptance Criteria\n\n1. **auth/logout** method is available as a REST API Endpoint.\n1. API method respects only POST method.\n1. API method can return a proper response message.\n1. API method return error if user is not logged in.",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"testUtils = extendGlobalTestUtils({",
+									"    verifyResponse: function(jsonData) {  ",
+									"        return () => {      ",
+									"            pm.expect(jsonData.message.code).to.eql(200);",
+									"            pm.expect(jsonData.message.message).to.eql('Bye!');",
+									"            pm.expect(jsonData.message.error).to.eql(false);",
+									"        }",
+									"    },",
+									"",
+									"    validate: function(response, schema) {        ",
+									"        return () => pm.expect(response).to.have.jsonSchema(schema);",
+									"    }",
+									"});"
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						}
+					]
+				},
+				{
+					"name": "Get Users",
+					"item": [
+						{
+							"name": "Proper request",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const response = pm.response;",
+											"const responseData = response.json();",
+											"",
+											"pm.test('Status code is 200', testUtils.responseSuccess(response));",
+											"pm.test('Schema is valid', testUtils.validate(responseData, usersListSchema));"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"// Login user. ",
+											"loginUser = {",
+											"    method: 'POST',",
+											"    url: pm.environment.get(\"baseUrl\") + 'auth/login/',",
+											"    header: 'Authorization:Bearer ' + pm.environment.get(\"token\"),",
+											"    body: {",
+											"      mode: 'urlencoded',",
+											"      urlencoded: [",
+											"        { key: \"username\", value: pm.environment.get(\"username\"), disabled: false },",
+											"        { key: \"password\", value: pm.environment.get(\"password\"), disabled: false }",
+											"      ]",
+											"    },",
+											"};",
+											"",
+											"pm.sendRequest(loginUser, function (error) {",
+											"    if (error) throw new Error(error);",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": []
+								},
+								"url": {
+									"raw": "{{baseUrl}}user/getUsers",
+									"host": [
+										"{{baseUrl}}user"
+									],
+									"path": [
+										"getUsers"
+									]
+								},
+								"description": "API endpoint should return users list."
+							},
+							"response": []
+						},
+						{
+							"name": "No permission",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const response = pm.response;",
+											"const responseData = response.json();",
+											"",
+											"pm.test('Error code is 403', testUtils.responseError(response, 403));",
+											"pm.test('Schema is valid', testUtils.validate(responseData, errorResponseSchema));",
+											"pm.test('If response has proper message', testUtils.verifyErrorResponse(responseData, 403, 'You do not have access to this method!'));"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"// Login user. ",
+											"loginUser = {",
+											"    method: 'POST',",
+											"    url: pm.environment.get(\"baseUrl\") + 'auth/logout/',",
+											"    header: 'Authorization:Bearer ' + pm.environment.get(\"token\")",
+											"};",
+											"",
+											"pm.sendRequest(loginUser, function (error) {",
+											"    if (error) throw new Error(error);",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": []
+								},
+								"url": {
+									"raw": "{{baseUrl}}user/getUsers",
+									"host": [
+										"{{baseUrl}}user"
+									],
+									"path": [
+										"getUsers"
+									]
+								},
+								"description": "API endpoint should return a no permission error massage."
+							},
+							"response": []
+						},
+						{
+							"name": "Wrong request method",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const response = pm.response;",
+											"const responseData = response.json();",
+											"",
+											"pm.test('Error code is 405', testUtils.responseError(response, 405));",
+											"pm.test('Schema is valid', testUtils.validate(responseData, errorResponseSchema));",
+											"pm.test('If response has proper message', testUtils.verifyErrorResponse(responseData, 405, 'Route `api/v1/user/getUsers` does not support `POST` requests.'));"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"// Login user. ",
+											"loginUser = {",
+											"    method: 'POST',",
+											"    url: pm.environment.get(\"baseUrl\") + 'auth/login/',",
+											"    header: 'Authorization:Bearer ' + pm.environment.get(\"token\"),",
+											"    body: {",
+											"      mode: 'urlencoded',",
+											"      urlencoded: [",
+											"        { key: \"username\", value: pm.environment.get(\"username\"), disabled: false },",
+											"        { key: \"password\", value: pm.environment.get(\"password\"), disabled: false }",
+											"      ]",
+											"    },",
+											"};",
+											"",
+											"pm.sendRequest(loginUser, function (error) {",
+											"    if (error) throw new Error(error);",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": []
+								},
+								"url": {
+									"raw": "{{baseUrl}}user/getUsers",
+									"host": [
+										"{{baseUrl}}user"
+									],
+									"path": [
+										"getUsers"
+									]
+								},
+								"description": "API endpoint should return a wrong request method error massage."
+							},
+							"response": []
+						}
+					],
+					"description": "## Description\n\nREST API should have a method to get list of users.\n\n## Acceptance Criteria\n\n1. **auth/getUsers** method is available as a REST API Endpoint.\n1. API method respects only GET method.\n1. API method can return a list of the users.\n1. API method return error if user is not logged in.",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"usersListSchema = {",
+									"    \"type\": \"object\",",
+									"    \"properties\": {",
+									"        \"users\": {",
+									"            \"type\": \"array\",",
+									"            \"items\": {",
+									"                \"type\": \"object\",",
+									"                \"properties\": {",
+									"                    \"userID\": {",
+									"                        \"type\": \"integer\"",
+									"                    },",
+									"                    \"username\": {",
+									"                        \"type\": \"string\"",
+									"                    },",
+									"                    \"avatar\": {",
+									"                        \"type\": [\"string\", \"null\"]",
+									"                    },",
+									"                    \"status\": {",
+									"                        \"type\": \"string\"",
+									"                    }",
+									"                },",
+									"                \"required\": [\"userID\", \"username\", \"status\"]",
+									"            }",
+									"        },",
+									"    },",
+									"    \"required\": [\"users\"]",
+									"};",
+									"",
+									"testUtils = extendGlobalTestUtils({",
+									"    validate: function(response, schema) {        ",
+									"        return () => pm.expect(response).to.have.jsonSchema(schema);",
+									"    }",
+									"});"
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						}
+					]
+				},
+				{
+					"name": "Get Current",
+					"item": [
+						{
+							"name": "Proper request",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const response = pm.response;",
+											"const responseData = response.json();",
+											"",
+											"pm.test('Status code is 200', testUtils.responseSuccess(response));",
+											"pm.test('Schema is valid', testUtils.validate(responseData, authenticationUserSchema));"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"// Login user. ",
+											"loginUser = {",
+											"    method: 'POST',",
+											"    url: pm.environment.get(\"baseUrl\") + 'auth/login/',",
+											"    header: 'Authorization:Bearer ' + pm.environment.get(\"token\"),",
+											"    body: {",
+											"      mode: 'urlencoded',",
+											"      urlencoded: [",
+											"        { key: \"username\", value: pm.environment.get(\"username\"), disabled: false },",
+											"        { key: \"password\", value: pm.environment.get(\"password\"), disabled: false }",
+											"      ]",
+											"    },",
+											"};",
+											"",
+											"pm.sendRequest(loginUser, function (error) {",
+											"    if (error) throw new Error(error);",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": []
+								},
+								"url": {
+									"raw": "{{baseUrl}}user/getCurrent",
+									"host": [
+										"{{baseUrl}}user"
+									],
+									"path": [
+										"getCurrent"
+									]
+								},
+								"description": "API endpoint should return user object."
+							},
+							"response": []
+						},
+						{
+							"name": "Not logged user",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const response = pm.response;",
+											"const responseData = response.json();",
+											"",
+											"pm.test('Error code is 403', testUtils.responseError(response, 403));",
+											"pm.test('Schema is valid', testUtils.validate(responseData, errorResponseSchema));",
+											"pm.test('If response has proper message', testUtils.verifyErrorResponse(responseData, 403, 'You are not logged in to the TNT!'));"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"// Login user. ",
+											"loginUser = {",
+											"    method: 'POST',",
+											"    url: pm.environment.get(\"baseUrl\") + 'auth/logout/',",
+											"    header: 'Authorization:Bearer ' + pm.environment.get(\"token\")",
+											"};",
+											"",
+											"pm.sendRequest(loginUser, function (error) {",
+											"    if (error) throw new Error(error);",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": []
+								},
+								"url": {
+									"raw": "{{baseUrl}}user/getCurrent",
+									"host": [
+										"{{baseUrl}}user"
+									],
+									"path": [
+										"getCurrent"
+									]
+								},
+								"description": "API endpoint should return a not logged user error massage."
+							},
+							"response": []
+						},
+						{
+							"name": "Wrong request method",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const response = pm.response;",
+											"const responseData = response.json();",
+											"",
+											"pm.test('Error code is 405', testUtils.responseError(response, 405));",
+											"pm.test('Schema is valid', testUtils.validate(responseData, errorResponseSchema));",
+											"pm.test('If response has proper message', testUtils.verifyErrorResponse(responseData, 405, 'Route `api/v1/user/getCurrent` does not support `POST` requests.'));"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"// Login user. ",
+											"loginUser = {",
+											"    method: 'POST',",
+											"    url: pm.environment.get(\"baseUrl\") + 'auth/login/',",
+											"    header: 'Authorization:Bearer ' + pm.environment.get(\"token\"),",
+											"    body: {",
+											"      mode: 'urlencoded',",
+											"      urlencoded: [",
+											"        { key: \"username\", value: pm.environment.get(\"username\"), disabled: false },",
+											"        { key: \"password\", value: pm.environment.get(\"password\"), disabled: false }",
+											"      ]",
+											"    },",
+											"};",
+											"",
+											"pm.sendRequest(loginUser, function (error) {",
+											"    if (error) throw new Error(error);",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": []
+								},
+								"url": {
+									"raw": "{{baseUrl}}user/getCurrent",
+									"host": [
+										"{{baseUrl}}user"
+									],
+									"path": [
+										"getCurrent"
+									]
+								},
+								"description": "API endpoint should return a wrong request method error massage."
+							},
+							"response": []
+						}
+					],
+					"description": "## Description\n\nREST API should have a method to get current user data (useful for the checking if user is logged in to the backend).\n\n## Acceptance Criteria\n\n1. **auth/getCurrent** method is available as a REST API Endpoint.\n1. API method respects only GET method.\n1. API method can return a user object.\n1. API method return error if user is not logged in.",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"testUtils = extendGlobalTestUtils({",
+									"    validate: function(response, schema) {        ",
+									"        return () => pm.expect(response).to.have.jsonSchema(schema);",
+									"    }",
+									"});"
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						}
+					]
+				}
+			],
+			"description": "## Description\n\nAuthentication Controller is used for get and manage user and session data in the database.",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"authenticationUserSchema = {",
+							"    \"type\": \"object\",",
+							"    \"properties\": {",
+							"        \"user\": {",
+							"            \"type\": \"object\",",
+							"            \"properties\": {",
+							"                \"userID\": {",
+							"                    \"type\": \"integer\"",
+							"                },",
+							"                \"username\": {",
+							"                    \"type\": \"string\"",
+							"                },",
+							"                \"avatar\": {",
+							"                    \"type\": [\"string\", \"null\"]",
+							"                },",
+							"                \"status\": {",
+							"                    \"type\": \"string\"",
+							"                }",
+							"            },",
+							"            \"required\": [\"userID\", \"username\", \"status\"]",
+							"        },",
+							"    },",
+							"    \"required\": [\"user\"]",
+							"};"
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"_ = require('lodash');",
+					"",
+					"",
+					"// Test that can be applied for any test.",
+					"globalTestUtils = {",
+					"    responseSuccess(response) {",
+					"        return () => {",
+					"            pm.expect(response).to.have.status(200);",
+					"        }",
+					"    },",
+					"    responseError(response, errorCode) {",
+					"        return () => {",
+					"            pm.expect(response).to.have.status(errorCode);",
+					"        }",
+					"    },",
+					"    verifyErrorResponse: function(jsonData, errorCode, errorMessage) {  ",
+					"        return () => {      ",
+					"            pm.expect(jsonData.code).to.be.equal(errorCode);",
+					"            pm.expect(jsonData.message).to.be.equal(errorMessage);",
+					"            pm.expect(jsonData.error).to.be.equal(true);",
+					"        }",
+					"    }",
+					"};",
+					"",
+					"// Helper for extanding local test utilities.",
+					"extendGlobalTestUtils = localTestUtils => ({    ",
+					"    ...globalTestUtils, ...localTestUtils,",
+					"});",
+					"",
+					"errorResponseSchema = {",
+					"    \"type\": \"object\",",
+					"    \"properties\": {",
+					"        \"code\": {",
+					"            \"type\": \"integer\",",
+					"        },",
+					"        \"message\": {",
+					"            \"type\": \"string\",",
+					"        },",
+					"        \"error\": {",
+					"            \"type\": \"boolean\",",
+					"        }",
+					"    },",
+					"    \"required\": [\"code\", \"message\", \"error\"]",
+					"};",
+					"",
+					"messageResponseSchema = {",
+					"    \"type\": \"object\",",
+					"    \"properties\": {",
+					"        \"message\": {",
+					"            \"type\": \"object\",",
+					"            \"properties\": {",
+					"                \"code\": {",
+					"                    \"type\": \"integer\",",
+					"                },",
+					"                \"message\": {",
+					"                    \"type\": \"string\",",
+					"                },",
+					"                \"error\": {",
+					"                    \"type\": \"boolean\",",
+					"                }",
+					"            },",
+					"            \"required\": [\"code\", \"message\", \"error\"]",
+					"        }",
+					"    },",
+					"    \"required\": [\"message\"]",
+					"};"
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}
