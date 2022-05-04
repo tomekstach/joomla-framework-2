@@ -1,0 +1,86 @@
+<?php
+
+/**
+ * Joomla! Framework Status Application
+ *
+ * @copyright  Copyright (C) 2014 - 2017 Open Source Matters, Inc. All rights reserved.
+ * @license    http://www.gnu.org/licenses/gpl-2.0.txt GNU General Public License Version 2 or Later
+ */
+
+// Application constants
+\define('APP_START', microtime(true));
+\define('JPATH_ROOT', \dirname(__DIR__));
+\define('JPATH_TEMPLATES', JPATH_ROOT . '/templates');
+
+$string = file_get_contents(JPATH_ROOT . '/etc/config.json');
+$config = json_decode($string, true);
+
+// Allow only from trusted domains
+$domains = $config['allowDomains'];
+
+if ($_SERVER['REQUEST_METHOD'] == "OPTIONS") {
+  if (@in_array($_SERVER['HTTP_ORIGIN'], $domains)) {
+    header("Content-Length: 0");
+    header("Content-Type: text/plain");
+    exit(0);
+  } else {
+    header("HTTP/1.1 403 Access Forbidden");
+    header("Content-Type: text/plain");
+    echo "You cannot repeat this request";
+    exit(0);
+  }
+}
+
+// Ensure we've initialized Composer
+if (!file_exists(JPATH_ROOT . '/vendor/autoload.php')) {
+  header('HTTP/1.1 500 Internal Server Error', null, 500);
+  echo '<html><head><title>Server Error</title></head><body><h1>Composer Not Installed</h1><p>Composer is not set up properly, please run "composer install".</p></body></html>';
+
+  exit(500);
+}
+
+require JPATH_ROOT . '/vendor/autoload.php';
+
+// Wrap in a try/catch so we can display an error if need be
+try {
+  $container = (new Joomla\DI\Container)
+    ->registerServiceProvider(new Katalyst\CM\Service\ApplicationProvider)
+    ->registerServiceProvider(new Katalyst\CM\Service\ConfigurationProvider(JPATH_ROOT . '/etc/config.json', JPATH_ROOT . '/etc/routing.json'))
+    ->registerServiceProvider(new Joomla\Database\Service\DatabaseProvider)
+    ->registerServiceProvider(new Katalyst\CM\Service\EventProvider)
+    ->registerServiceProvider(new Katalyst\CM\Service\LoggingProvider);
+
+  // Alias the web application to Joomla's base application class as this is the primary application for the environment
+  $container->alias(Joomla\Application\AbstractApplication::class, Joomla\Application\AbstractWebApplication::class);
+
+  // Alias the web logger to the PSR-3 interface as this is the primary logger for the environment
+  $container->alias(Monolog\Logger::class, 'monolog.logger.application.web')
+    ->alias(Psr\Log\LoggerInterface::class, 'monolog.logger.application.web');
+
+  // Set error reporting based on config
+  $errorReporting = (int) $container->get('config')->get('errorReporting', 0);
+  error_reporting($errorReporting);
+} catch (\Throwable $e) {
+  error_log($e);
+
+  header('HTTP/1.1 500 Internal Server Error', null, 500);
+  echo '<html><head><title>Container Initialization Error</title></head><body><h1>Container Initialization Error</h1><p>An error occurred while creating the DI container: ' . $e->getMessage() . '</p></body></html>';
+
+  exit(1);
+}
+
+// Execute the application
+try {
+  $container->get(Joomla\Application\AbstractApplication::class)->execute();
+} catch (\Throwable $e) {
+  error_log($e);
+
+  if (!headers_sent()) {
+    header('HTTP/1.1 500 Internal Server Error', null, 500);
+    header('Content-Type: text/html; charset=utf-8');
+  }
+
+  echo '<html><head><title>Application Error</title></head><body><h1>Application Error</h1><p>An error occurred while executing the application: ' . $e->getMessage() . '</p></body></html>';
+
+  exit(1);
+}
