@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Backend part of the Career Map website application
+ * REST API application
  *
  * @copyright  Copyright (C) 2021 Katalyst Education. All rights reserved.
  * @license    Licensed under the MIT license. See LICENSE file in the project root for full license text.

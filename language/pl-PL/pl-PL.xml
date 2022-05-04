@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<metafile version="1.0" client="site">
+	<name>Polish (Poland)</name>
+	<version>1.0.0</version>
+	<creationDate>2021-06-09</creationDate>
+	<author>Career Map</author>
+	<authorEmail>tomasz.stach@katalysteducation.org</authorEmail>
+	<authorUrl>mapakarier.org</authorUrl>
+	<copyright>Copyright (C) 2021 Katalyst Education. All rights reserved.</copyright>
+	<license>Licensed under the MIT license. See LICENSE file in the project root for full license text.</license>
+	<description>pl-PL site language</description>
+	<files>
+		<filename>pl-PL.ini</filename>
+	</files>
+	<metadata>
+		<name>Polish (Poland)</name>
+		<tag>pl-PL</tag>
+		<rtl>0</rtl>
+		<locale>pl_PL.utf8, pl_PL.UTF-8, pl_PL, pl, polish, poland</locale>
+		<firstDay>0</firstDay>
+    <weekEnd>0,6</weekEnd>
+	</metadata>
+	<params />
+</metafile>

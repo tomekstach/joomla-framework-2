@@ -14,6 +14,7 @@
   "errorReporting": 0,
   "debug": false,
   "dev": true,
+  "language": "pl-PL",
   "sessionExpire": 3600,
   "tokenExpire": 3600,
   "k": "",

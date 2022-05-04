@@ -14,6 +14,12 @@ use Joomla\Database\DatabaseInterface;
 use Joomla\Session\Session;
 use Katalyst\CM\Helper\AuthenticationHelper;
 
+use Joomla\Language\LanguageFactory;
+use Joomla\Language\Parser\IniParser;
+use Joomla\Language\ParserRegistry;
+use Joomla\Language\Text;
+use Joomla\Language\Language;
+
 require_once JPATH_ROOT . '/vendor/autoload.php';
 
 class GetKeyMethodTest extends TestCase
@@ -101,8 +107,16 @@ class GetKeyMethodTest extends TestCase
     // This is test session - not from the Joomla!
     $this->session  = $mockSession;
 
+    // Set up langage
+    $parserRegistry = new ParserRegistry;
+    $parserRegistry->add(new IniParser);
+
+    $language = new Language($parserRegistry, JPATH_ROOT, 'en-GB');
+    $language->load();
+    $lang = new Text($language);
+
     // Create AuthenticationModelUnderTest
-    $this->AuthenticationModelUnderTest = new AuthenticationModel($this->db, $this->container->get(AuthenticationHelper::class), $this->config);
+    $this->AuthenticationModelUnderTest = new AuthenticationModel($this->db, $this->container->get(AuthenticationHelper::class), $this->config, $lang);
     $this->AuthenticationModelUnderTest->setInput($this->input);
     $this->AuthenticationModelUnderTest->setSession($this->session);
   }

@@ -1,9 +1,9 @@
 <?php
 
 /**
- * Backend part of the Career Map website application
+ * REST API application
  *
- * @copyright  Copyright (C) 2019 Katalyst Education. All rights reserved.
+ * @copyright  Copyright (C) 2021 Katalyst Education. All rights reserved.
  * @license    Licensed under the MIT license. See LICENSE file in the project root for full license text.
  */
 
@@ -69,18 +69,26 @@ class AuthenticationModel implements DatabaseModelInterface
   private $AuthenticationHelper;
 
   /**
+   * Language object
+   *
+   * @var  Text
+   */
+  protected $lang;
+
+  /**
    * Instantiate the model.
    *
    * @param   DatabaseDriver  $db      The database adapter.
    *
    * @since   1.0
    */
-  public function __construct(DatabaseDriver $db, AuthenticationHelper $AuthenticationHelper, $config)
+  public function __construct(DatabaseDriver $db, AuthenticationHelper $AuthenticationHelper, $config, $lang)
   {
     $this->setDb($db);
 
     $this->config = $config;
     $this->AuthenticationHelper =  $AuthenticationHelper;
+    $this->lang = $lang;
   }
 
   /**
@@ -132,11 +140,11 @@ class AuthenticationModel implements DatabaseModelInterface
     ];
 
     if ($this->input->get('username', '', 'raw') == '') {
-      throw new AuthenticationException('Username is empty!', 403);
+      throw new AuthenticationException($this->lang->translate('APP_AUTH_ERROR_USERNAME_EMPTY'), 403);
     }
 
     if ($this->input->get('password', '', 'raw') == '') {
-      throw new AuthenticationException('Password is empty!', 403);
+      throw new AuthenticationException($this->lang->translate('APP_AUTH_ERROR_PASSWORD_EMPTY'), 403);
     }
 
     $db = $this->getDb();
@@ -152,11 +160,11 @@ class AuthenticationModel implements DatabaseModelInterface
     $user = $db->loadObject();
 
     if (!is_object($user)) {
-      throw new AuthenticationException('Wrong username!', 403);
+      throw new AuthenticationException($this->lang->translate('APP_AUTH_ERROR_USERNAME_WRONG'), 403);
     }
 
     if ($user->username !== $this->input->get('username', '', 'raw')) {
-      throw new AuthenticationException('Wrong username!', 403);
+      throw new AuthenticationException($this->lang->translate('APP_AUTH_ERROR_USERNAME_WRONG'), 403);
     }
 
     $authentication = new DatabaseStrategy($this->input, $this->getDb(), $options);
@@ -164,7 +172,7 @@ class AuthenticationModel implements DatabaseModelInterface
     $username = $authentication->authenticate();
 
     if (!$username) {
-      throw new AuthenticationException('Wrong password!', 403);
+      throw new AuthenticationException($this->lang->translate('APP_AUTH_ERROR_PASSWORD_WRONG'), 403);
     } else {
 
       $fields = array(
@@ -203,7 +211,7 @@ class AuthenticationModel implements DatabaseModelInterface
     $db = $this->getDb();
 
     if (intval($this->session->get('userid')) < 1) {
-      throw new AuthenticationException('User already logged out!', 400);
+      throw new AuthenticationException($this->lang->translate('APP_AUTH_ERROR_ALREADY_LOGOUT'), 400);
     }
 
     $query = $db->getQuery(true)
@@ -262,7 +270,7 @@ class AuthenticationModel implements DatabaseModelInterface
     if ($id == 0) {
       $id = intval($this->session->get('userid', 0));
       if ($id == 0) {
-        throw new AuthenticationException('You are not logged in to the TNT!', 403);
+        throw new AuthenticationException($this->lang->translate('APP_AUTH_ERROR_USER_NOT_LOGGED'), 403);
       }
     }
 
@@ -276,7 +284,7 @@ class AuthenticationModel implements DatabaseModelInterface
     $user = $db->loadObject();
 
     if ($user === null) {
-      throw new AuthenticationException('Wrong User ID!', 403);
+      throw new AuthenticationException($this->lang->translate('APP_AUTH_ERROR_WRONG_USER_ID'), 403);
     }
 
     $user->userID = (int) $user->userID;
@@ -296,7 +304,7 @@ class AuthenticationModel implements DatabaseModelInterface
     $db = $this->getDb();
 
     if (intval($this->session->get('level', 0)) <= 0) {
-      throw new APIException('You do not have access to this method!', 403);
+      throw new APIException($this->lang->translate('APP_AUTH_ERROR_PERMISSION_DENIED'), 403);
     }
 
     $query = $db->getQuery(true)
@@ -323,13 +331,13 @@ class AuthenticationModel implements DatabaseModelInterface
   public function getKey(): array
   {
     if (!empty($this->session->get('sessionhash')) or intval($this->session->get('level', 0)) < 4) {
-      throw new APIException('You do not have access to this method!', 403);
+      throw new APIException($this->lang->translate('APP_AUTH_ERROR_PERMISSION_DENIED'), 403);
     }
 
     try {
       $key = $this->AuthenticationHelper->getKey();
     } catch (\Throwable $th) {
-      throw new APIException('Something is wrong with JWK Key generation!', 400);
+      throw new APIException($this->lang->translate('APP_AUTH_ERROR_JWK_KEY_GENERATION'), 400);
     }
 
     return ['k' => $key];
@@ -345,13 +353,13 @@ class AuthenticationModel implements DatabaseModelInterface
   public function getToken(): array
   {
     if (!empty($this->session->get('sessionhash')) or intval($this->session->get('level', 0)) < 4) {
-      throw new APIException('You do not have access to this method!', 403);
+      throw new APIException($this->lang->translate('APP_AUTH_ERROR_PERMISSION_DENIED'), 403);
     }
 
     try {
       $token = $this->AuthenticationHelper->getToken($this->session->get('userid', 1));
     } catch (\Throwable $th) {
-      throw new APIException('Something is wrong with JWS Token generation!', 400);
+      throw new APIException($this->lang->translate('APP_AUTH_ERROR_JWS_TOKEN_GENERATION'), 400);
     }
 
     return ['jws' => $token];
