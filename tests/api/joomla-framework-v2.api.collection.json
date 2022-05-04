@@ -100,7 +100,14 @@
 									]
 								},
 								"method": "POST",
-								"header": [],
+								"header": [
+									{
+										"key": "Lang",
+										"value": "pl-PL",
+										"type": "text",
+										"disabled": true
+									}
+								],
 								"body": {
 									"mode": "formdata",
 									"formdata": [
@@ -318,7 +325,7 @@
 											"",
 											"pm.test('Error code is 405', testUtils.responseError(response, 405));",
 											"pm.test('Schema is valid', testUtils.validate(responseData, errorResponseSchema));",
-											"pm.test('If response has proper message', testUtils.verifyErrorResponse(responseData, 405, 'Route `api/v1/auth/login` does not support `GET` requests.'));"
+											"pm.test('If response has proper message', testUtils.verifyErrorResponse(responseData, 405, 'Route `v1/auth/login` does not support `GET` requests.'));"
 										],
 										"type": "text/javascript"
 									}
@@ -1004,7 +1011,7 @@
 											"",
 											"pm.test('Error code is 403', testUtils.responseError(response, 403));",
 											"pm.test('Schema is valid', testUtils.validate(responseData, errorResponseSchema));",
-											"pm.test('If response has proper message', testUtils.verifyErrorResponse(responseData, 403, 'You are not logged in to the TNT!'));"
+											"pm.test('If response has proper message', testUtils.verifyErrorResponse(responseData, 403, 'You are not logged in to the application!'));"
 										],
 										"type": "text/javascript"
 									}

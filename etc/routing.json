@@ -1,7 +1,7 @@
 {
   "routes": [{
       "method": "post",
-      "pattern": "/api/v1/auth/:method",
+      "pattern": "/v1/auth/:method",
       "controller": "Api\\AuthenticationControllerGet",
       "rules": [],
       "defaults": [{
@@ -10,7 +10,7 @@
     },
     {
       "method": "get",
-      "pattern": "/api/v1/user/:method",
+      "pattern": "/v1/user/:method",
       "controller": "Api\\AuthenticationControllerGet",
       "rules": [],
       "defaults": [{

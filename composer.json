@@ -1,7 +1,7 @@
 {
   "name": "katalysteducation/joomla-framework-v2",
   "version": "1.0.0-alpha.1",
-  "description": "Base for the API application",
+  "description": "Application code for REST API",
   "homepage": "https://katalysteducation.org",
   "license": "GPL-2.0-or-later",
   "require": {
@@ -26,6 +26,7 @@
     "joomla/utilities": "^2.0@beta",
     "joomla/view": "^2.0@beta",
     "joomla/session": "^2.0@beta",
+    "joomla/language": "^2.0@alpha",
     "joomla/authentication": "^2.0@beta",
     "laminas/laminas-diactoros": "^2.3",
     "monolog/monolog": "^2.1",

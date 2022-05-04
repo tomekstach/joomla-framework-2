@@ -1,9 +1,9 @@
 <?php
 
 /**
- * Joomla! Framework Website
+ * REST API application
  *
- * @copyright  Copyright (C) 2014 - 2017 Open Source Matters, Inc. All rights reserved.
+ * @copyright  Copyright (C) 2021 Katalyst Education. All rights reserved.
  * @license    http://www.gnu.org/licenses/gpl-2.0.txt GNU General Public License Version 2 or Later
  */
 
@@ -32,10 +32,16 @@ use Katalyst\CM\View\Authentication\AuthenticationJsonView;
 use Katalyst\CM\WebApplication;
 use Joomla\Input\Input;
 use Joomla\Router\Command\DebugRouterCommand;
-//use Joomla\Router\Route;
 use Joomla\Router\Router;
 use Joomla\Router\RouterInterface;
 use Joomla\Session\Handler\DatabaseHandler;
+
+use Joomla\Language\LanguageFactory;
+use Joomla\Language\Parser\IniParser;
+use Joomla\Language\ParserRegistry;
+use Joomla\Language\Text;
+use Joomla\Language\Language;
+
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Input\ArgvInput;
 use Symfony\Component\Console\Output\ConsoleOutput;
@@ -53,6 +59,27 @@ use RuntimeException;
  */
 class ApplicationProvider implements ServiceProviderInterface
 {
+  /**
+   * LanguageFactory object to use for testing
+   *
+   * @var  LanguageFactory
+   */
+  private static $factory;
+
+  /**
+   * Language object
+   *
+   * @var  Text
+   */
+  protected $lang;
+
+  /**
+   * File parser registry
+   *
+   * @var  ParserRegistry
+   */
+  private $parserRegistry;
+
   /**
    * Registers the service provider with a DI container.
    *
@@ -167,6 +194,23 @@ class ApplicationProvider implements ServiceProviderInterface
    */
   public function getApplicationRouterService(Container $container): RouterInterface
   {
+    $config   = $container->get('config');
+
+    $this->parserRegistry = new ParserRegistry;
+    $this->parserRegistry->add(new IniParser);
+
+    $headers = $this->apache2_request_headers();
+
+    if (array_key_exists('Lang', $headers)) {
+      $lang = $headers['Lang'];
+    } else {
+      $lang = $config->get('language');
+    }
+
+    $language = new Language($this->parserRegistry, JPATH_ROOT, $lang);
+    $language->load();
+    $this->lang = new Text($language);
+
     $router = new Router;
 
     /*
@@ -182,7 +226,6 @@ class ApplicationProvider implements ServiceProviderInterface
     /*
 		 * API routes
 		 */
-    $config   = $container->get('config');
     $routing  = $container->get('routing');
 
     foreach ($routing->get('routes') as $route) {
@@ -312,7 +355,7 @@ class ApplicationProvider implements ServiceProviderInterface
   {
     $config = $container->get('config');
 
-    return new AuthenticationModel($container->get(DatabaseInterface::class), $container->get(AuthenticationHelper::class), $config);
+    return new AuthenticationModel($container->get(DatabaseInterface::class), $container->get(AuthenticationHelper::class), $config, $this->lang);
   }
 
   /**
@@ -493,21 +536,21 @@ class ApplicationProvider implements ServiceProviderInterface
           $db->setQuery($query, 0, 1);
           $user = $db->loadObject();
 
-          $columns = array(
+          $columns = [
             $db->quoteName('session_id'),
             $db->quoteName('guest'),
             $db->quoteName('time'),
             $db->quoteName('userid'),
             $db->quoteName('username')
-          );
+          ];
 
-          $values = array(
+          $values = [
             $db->quote($session->getId()),
             0,
             $db->quote((int) $time),
             $payload->uid,
             $db->quote($user->username)
-          );
+          ];
 
           $query->clear();
 
@@ -565,19 +608,19 @@ class ApplicationProvider implements ServiceProviderInterface
 
         $time = $session->isNew() ? time() : $session->get('session.timer.start');
 
-        $columns = array(
+        $columns = [
           $db->quoteName('session_id'),
           $db->quoteName('guest'),
           $db->quoteName('time'),
           $db->quoteName('userid')
-        );
+        ];
 
-        $values = array(
+        $values = [
           $db->quote($session->getId()),
           1,
           $db->quote((int) $time),
           0
-        );
+        ];
 
         $query->insert($db->quoteName('#__session'))
           ->columns($columns)
@@ -613,5 +656,18 @@ class ApplicationProvider implements ServiceProviderInterface
       }
     }
     return $out;
+  }
+
+  public function getLanguage(Container $container): Language
+  {
+    $config = $container->get('config');
+    // Get language object with the lang tag and debug setting in your configuration
+    // This also loads language file /xx-XX/xx-XX.ini and localisation methods /xx-XX/xx-XX.localise.php if available
+    $language = Language::getInstance($config->get('language'), $config->get('debug'));
+
+    // Configure Text to use language instance
+    Text::setLanguage($language);
+
+    return $language;
   }
 }
