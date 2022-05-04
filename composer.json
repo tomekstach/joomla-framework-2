@@ -1,0 +1,57 @@
+{
+  "name": "katalysteducation/joomla-framework-v2",
+  "version": "1.0.0-alpha.1",
+  "description": "Base for the API application",
+  "homepage": "https://katalysteducation.org",
+  "license": "GPL-2.0-or-later",
+  "require": {
+    "php": "^7.2",
+    "ext-json": "*",
+    "ext-pdo": "*",
+    "fig/link-util": "^1.1",
+    "joomla/application": "^2.0@beta",
+    "joomla/console": "^2.0@beta",
+    "joomla/controller": "^2.0@beta",
+    "joomla/database": "^2.0@beta",
+    "joomla/di": "^2.0@beta",
+    "joomla/event": "^2.0@beta",
+    "joomla/filesystem": "^2.0@beta",
+    "joomla/filter": "^2.0@beta",
+    "joomla/input": "^2.0@beta",
+    "joomla/model": "^2.0@beta",
+    "joomla/registry": "^2.0@beta",
+    "joomla/router": "^2.0@beta",
+    "joomla/string": "^2.0@beta",
+    "joomla/uri": "^2.0@beta",
+    "joomla/utilities": "^2.0@beta",
+    "joomla/view": "^2.0@beta",
+    "joomla/session": "^2.0@beta",
+    "joomla/authentication": "^2.0@beta",
+    "laminas/laminas-diactoros": "^2.3",
+    "monolog/monolog": "^2.1",
+    "psr/link": "^1.0",
+    "ramsey/uuid": "^4.0.1",
+    "robmorgan/phinx": "^0.12.3",
+    "web-token/jwt-key-mgmt": "^2.2",
+    "web-token/jwt-core": "^2.2",
+    "web-token/jwt-signature-algorithm-hmac": "^2.2"
+  },
+  "require-dev": {
+    "joomla/coding-standards": "dev-master"
+  },
+  "replace": {
+    "paragonie/random_compat": "*",
+    "symfony/polyfill-php70": "*",
+    "symfony/polyfill-php72": "*"
+  },
+  "autoload": {
+    "psr-4": {
+      "Katalyst\\CM\\": "src/"
+    }
+  },
+  "config": {
+    "platform": {
+      "php": "7.2.21"
+    }
+  }
+}
